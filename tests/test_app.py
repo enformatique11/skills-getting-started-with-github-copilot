@@ -7,14 +7,16 @@ from src.app import activities, app
 
 
 client = TestClient(app)
+BASELINE_ACTIVITIES = deepcopy(activities)
 
 
 @pytest.fixture(autouse=True)
 def restore_activities():
-    original = deepcopy(activities)
+    activities.clear()
+    activities.update(deepcopy(BASELINE_ACTIVITIES))
     yield
     activities.clear()
-    activities.update(original)
+    activities.update(deepcopy(BASELINE_ACTIVITIES))
 
 
 def test_signup_adds_participant_to_existing_activity():
